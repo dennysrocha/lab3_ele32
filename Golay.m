@@ -1,4 +1,4 @@
-function [output] = Golay(p)
+function [output] = Golay(p,len)
 % essa é basicamente a funcão main, que recebe o arquivo .txt como entrada
 % do canal e retorna outro .txt, que representa a saída do canal
 % decodificada
@@ -12,7 +12,7 @@ function [output] = Golay(p)
 %
 %% CODIGO
 fileID = fopen('generatedBits.txt','w');
-fprintf(fileID,'%d',randi([0 1],1,1000));
+fprintf(fileID,'%d',randi([0 1],1,len));
 fclose(fileID);
 fileID = fopen('generatedBits.txt','r');
 data = fread(fileID);
@@ -41,5 +41,28 @@ end;
 
 fileComparison = fopen('comparisonBits.txt','w');
 fprintf(fileComparison,'%d',output);
-end
+fclose(fileComparison);
 
+%% COMPARACAO ENTRE ARQUIVOS
+fileGenerated = fopen('generatedBits.txt','r');
+fileComparison = fopen('comparisonBits.txt','r');
+generated = fread(fileGenerated);
+comparison = fread(fileComparison);
+fclose(fileGenerated);
+fclose(fileComparison);
+
+l = length(comparison);
+errors = 0;
+
+for i=1:l
+    if generated(i)~=comparison(i)
+        errors = errors+1;
+    end;
+end;
+
+dataPlot = fopen('data.txt','a+');
+
+fprintf(dataPlot,'%f %f\r\n',p,errors/l);
+fclose(dataPlot);
+
+end

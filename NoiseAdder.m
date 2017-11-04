@@ -19,8 +19,6 @@ for i=1:24
         w_noised(i) = mod(w(i)+1,2);
     end;
 end;
-w
-w_noised
 
 end
 
