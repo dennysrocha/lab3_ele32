@@ -59,8 +59,12 @@ for i=1:l
         errors = errors+1;
     end;
 end;
+file = 'data';
+string = int2str(len);
+file = strcat(file,string);
+file = strcat(file,'.txt');
 
-dataPlot = fopen('data.txt','a+');
+dataPlot = fopen(file,'a+');
 
 fprintf(dataPlot,'%f %f\r\n',p,errors/l);
 fclose(dataPlot);
