@@ -97,12 +97,12 @@ if ns1>3
             S2 = J*s2;
             R2 = mod(S2+A,2);
             nr2 = (R2*J)';
-            aux = 0;
+            aux2 = 0;
             % caso o peso de s+A_i seja menor que 2 para algum
             % i = 1,2,...,12, o código está determinado
             for i=1:12
               if nr2(i)<3
-                aux = 1;
+                aux2 = 1;
                 u = [I(i,:),mod(R2(i,:),2)];
                 v = mod(w+u,2);
                 codigoDecodificado = v(1:12);
@@ -111,7 +111,7 @@ if ns1>3
             end;
             % caso o peso de s+A_i seja maior que 2 para algum
             % i = 1,2,...,12, é necessário pedir retransmissão da mensagem
-            if aux==0
+            if aux2==0
                 codigoDecodificado = w(1:12);
                 retransmitir = 1;
             end;
