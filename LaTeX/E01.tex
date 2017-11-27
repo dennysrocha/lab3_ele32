@@ -200,12 +200,12 @@ reprint,%
 	cujos $A_{i}$, $i=1,...,11$, são obtidos sucessivamente através do vetor
 	
 	\begin{equation}
-		A_1 = \left[1\begin{array}{ccccccccccc}
+		A_1 = \left[\begin{array}{ccccccccccc}
 		1&1&0&1&1&1&0&0&0&1&0
 		\end{array}\right]
 	\end{equation}
 	
-	mudando a posição do primeiro elemento para a última posição e com $A_{12}$ um vetor com apenas a ultima coluna igual a zero:
+	mudando a posição do primeiro elemento para a última posição. Com os $A_i$ em mãos, adiciona-se uma coluna ao final de cada vetor com o valor 1. O vetor $A_{12}$ é um vetor com apenas a ultima coluna igual a zero. Resulta em:
 	
 	\begin{equation}
 		A = \left[\begin{array}{cccccccccccc}
@@ -220,7 +220,7 @@ reprint,%
 		0&1&0&1&1&0&1&1&1&0&0&1 \\
 		1&0&1&1&0&1&1&1&0&0&0&1 \\
 		0&1&1&0&1&1&1&0&0&0&1&1 \\
-		1&1&1&1&1&1&1&1&1&1&1&1
+		1&1&1&1&1&1&1&1&1&1&1&0
 		\end{array}
 		\right]
 	\end{equation}
@@ -280,29 +280,37 @@ reprint,%
 	
 	\section{resultados\label{sec:resultados}}
 	
-	1. Qual foi a maior dificuldade de implementar o decodificador para o código de Hamming?
-	Para a implementação do código de Hamming, a matriz Ht foi escrita na forma de $(2^n)-1$ linhas por n colunas, de forma que todas as combinações de vetores independentes possíveis fossem escritas, a menos do vetor nulo. Para facilitar na decodificação, escreveu-se os vetores em ordem decrescente (a partir do vetor todo 1), a exceção dos vetores com peso de Hamming unitário, que foram escritos na forma de uma matriz identidade nas últimas linhas.
+	\textbf{1. Qual foi a maior dificuldade de implementar o decodificador para o código de Hamming?}\newline
+	
+	Para a implementação do código de Hamming, a matriz $H^T$ foi escrita na forma de $2^n-1$ linhas por $n$ colunas, de forma que todas as combinações de vetores independentes possíveis fossem escritas, a menos do vetor nulo. Para facilitar na decodificação, escreveu-se os vetores em ordem decrescente (a partir do vetor todo 1), a exceção dos vetores com peso de Hamming unitário, que foram escritos na forma de uma matriz identidade nas últimas linhas.
 	Assim, a maior dificuldade, foi que ao contar a síndrome e relacionar com o erro, fazia-se uma contagem decrescente a partir do vetor todo 1, decrementando-o, e dever-se-ia pular os vetores de Hamming com peso um nessa contagem.
+	\newline
 	
-	2. Qual foi o método utilizado para encontrar o código maior? Este método é extensível para qualquer tamanho de bloco?
 	
-	O primeiro método consistia em determinar um conjunto de vetores de tamanho n e distância de Hamming mínima k entre eles. Nesse método, partia-se de um vetor inicial de tamanho n com todos os elementos unitários e decrementava-se, verificando se o resultado tinha distância de Hamming k entre todos os vetores da lista em construção (cujo primeiro elemento era o vetor inicial), e em caso afirmativo, adicionava-o à lista. Com a lista concluída, fazia-se uma outra seleção, construindo-se uma lista de todas as síndromes possíveis, com elementos iniciais de peso de Hamming 1 (erros de apenas um bit), em seguida realizando todas as combinações de até Q elementos da lista anterior. Assim, gerava-se uma relação entre as síndromes e os erros nos bits. 
-	Utilizou-se o tipo unsigned long long int para essas operações de vetores de bit, representando um vetor de bit de tamanho até 64. A princípio, utilizando-se uma representação maior que 64 bits, esse método é extensível para qualquer tamanho de bloco n, sendo selecionados vetores com distâncias mínima k, realizando-se Q combinações entre eles. 
+	\textbf{2. Qual foi o método utilizado para encontrar o código maior? Este método é extensível para qualquer tamanho de bloco?}\newline
 	
-	3. Qual é a relação medida entre o tamanho do bloco e o desempenho?
+	O primeiro método consistia em determinar um conjunto de vetores de tamanho $n$ e distância de Hamming mínima $k$ entre eles. Nesse método, partia-se de um vetor inicial de tamanho $n$ com todos os elementos unitários e decrementava-se, verificando se o resultado tinha distância de Hamming $k$ entre todos os vetores da lista em construção (cujo primeiro elemento era o vetor inicial), e em caso afirmativo, adicionava-o à lista. Com a lista concluída, fazia-se uma outra seleção, construindo-se uma lista de todas as síndromes possíveis, com elementos iniciais de peso de Hamming 1 (erros de apenas um bit), em seguida realizando todas as combinações de até Q elementos da lista anterior. Assim, gerava-se uma relação entre as síndromes e os erros nos bits. 
+	Utilizou-se o tipo unsigned long long int para essas operações de vetores de bit, representando um vetor de bit de tamanho até 64. A princípio, utilizando-se uma representação maior que 64 bits, esse método é extensível para qualquer tamanho de bloco $n$, sendo selecionados vetores com distâncias mínima $k$, realizando-se Q combinações entre eles. 
+	\newline
+	
+	\textbf{3. Qual é a relação medida entre o tamanho do bloco e o desempenho?}\newline
+	
 	Para o código de Hamming, que corrige apenas um erro, um aumento no tamanho do bloco significava uma melhor taxa de transmissão, porém com uma maior taxa de erro de bits.
-	Para o algoritmo de seleção de códigos com distância mínima k, verificou-se mais correções de erros de bits com o aumento de k.
+	Para o algoritmo de seleção de códigos com distância mínima $k$, verificou-se mais correções de erros de bits com o aumento de $k$.
+	\newline
 	
-	4. Como o seu código se compara com a capacidade do canal? Utilize uma probabilidade de erro de bit de $10^-5$.
-	A capacidade do canal binário simétrico pode ser calculada por $1 + p log2 p  + (1 - p) log2 (1 - p)$, o que resulta em 0.99982 bit por uso de canal, para a probabilidade de erro de bit de $10^-5$. A nossa implementação do código de Golay utiliza uma taxa de $50 percento$, corrigindo até 3 erros em um bloco, diminuindo a taxa de erro de bits de $10^-5$ para ?????. Assim, temos uma capacidade de aproximadamente 0.5 bit por uso de canal.
+	\textbf{4. Como o seu código se compara com a capacidade do canal? Utilize uma probabilidade de erro de bit de $10^-5$.}\newline
 	
-	5. Qual é a complexidade de codificação e decodificação do seu sistema?
+	A capacidade do canal binário simétrico pode ser calculada por $1 + p\cdot log_{2}p  + (1-p)\cdot log_{2}(1-p)$, o que resulta em 0.99982 bit por uso de canal, para a probabilidade de erro de bit de $10^-5$. A nossa implementação do código de Golay utiliza uma taxa de $50 percento$, corrigindo até 3 erros em um bloco, diminuindo a taxa de erro de bits de $10^-5$ para $0.00000$. Assim, temos uma capacidade de aproximadamente 0.5 bit por uso de canal.
+	\newline
+	
+	\textbf{5. Qual é a complexidade de codificação e decodificação do seu sistema?}\newline
+		
 	Para o primeiro método de seleção por força bruta, encontrados os v elementos de tamanho n e de distância k, a codificação se reduz a uma multiplicação de matrizes, com ordem $O(n*v)$ e a decodificação se resumia a uma outra multiplicação de matrizes de ordem $O(n*v)$ e uma busca de síndrome na tabela, de $O(1)$. A complexidade estava em achar tais elementos (construir a matriz g), de ordem $O(2^n)$ e na construção da tabela de ordem $O(v^Q)$.
-	Para a nossa implementação de Golay 24, Dennys????
+	Para a nossa implementação de Golay 24, tanto o algoritmo da codificação quando o da decodificação apresentam ordem $O(12)$, provenientes da construção da matriz de paridade G e análise das síndromes geradas, respectivamente. A construção do canal BSC requeriu uma ordem $O(24)$ para tratar cada bit individualmente.
 	
 	
 	\section{Conclus\~ao}
-	
 	
 	
 	
